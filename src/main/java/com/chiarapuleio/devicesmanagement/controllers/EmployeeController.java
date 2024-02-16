@@ -56,7 +56,7 @@ public class EmployeeController {
         employeeSrv.findByIdAndDelete(id);
     }
 
-    @PatchMapping("/{authorId}/avatar")
+    @PatchMapping("/{id}/avatar")
     public Employee uploadAvatar(@RequestParam("avatar") MultipartFile file, @PathVariable UUID id) {
         try {
             return employeeSrv.uploadAvatar(id, file);
