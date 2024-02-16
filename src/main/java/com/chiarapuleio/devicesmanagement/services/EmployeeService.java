@@ -5,8 +5,11 @@ import com.chiarapuleio.devicesmanagement.entities.Employee;
 import com.chiarapuleio.devicesmanagement.exceptions.BadRequestException;
 import com.chiarapuleio.devicesmanagement.exceptions.NotFoundException;
 import com.chiarapuleio.devicesmanagement.payloads.EmployeeDTO;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,6 +18,8 @@ import java.util.UUID;
 public class EmployeeService {
     @Autowired
     private EmployeeDAO employeeDAO;
+    @Autowired
+    private Cloudinary cloudinaryUploader;
 
     public Employee save(EmployeeDTO employee) throws IOException {
         employeeDAO.findByEmail(employee.email()).ifPresent(emp -> {
@@ -46,5 +51,12 @@ public class EmployeeService {
     public void findByIdAndDelete(UUID id){
         Employee empFound = this.findById(id);
         employeeDAO.delete(empFound);
+    }
+
+    public Employee uploadAvatar(UUID id, MultipartFile file) throws IOException {
+        Employee found = this.findById(id);
+        String avatarURL = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setAvatarUrl(avatarURL);
+        return employeeDAO.save(found);
     }
 }

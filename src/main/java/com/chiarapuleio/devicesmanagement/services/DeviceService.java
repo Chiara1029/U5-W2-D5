@@ -15,6 +15,8 @@ import java.util.UUID;
 public class DeviceService {
     @Autowired
     private DeviceDAO deviceDAO;
+    @Autowired
+    private EmployeeService empSrv;
 
     public Device save(DeviceDTO device){
         Device newDev = new Device();
@@ -39,5 +41,13 @@ public class DeviceService {
     public void findByIdAndDelete(UUID id){
         Device devFound = this.findById(id);
         deviceDAO.delete(devFound);
+    }
+
+    public Device setDeviceEmployee(UUID employeeId, UUID deviceId){
+        Employee employee = empSrv.findById(employeeId);
+        Device devFound = this.findById(deviceId);
+        devFound.setEmployee(employee);
+        devFound.setDeviceStatus(DeviceStatus.ASSIGNED);
+        return deviceDAO.save(devFound);
     }
 }

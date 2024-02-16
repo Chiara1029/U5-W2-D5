@@ -2,6 +2,7 @@ package com.chiarapuleio.devicesmanagement.controllers;
 
 import com.chiarapuleio.devicesmanagement.dao.DeviceDAO;
 import com.chiarapuleio.devicesmanagement.entities.Device;
+import com.chiarapuleio.devicesmanagement.entities.Employee;
 import com.chiarapuleio.devicesmanagement.exceptions.BadRequestException;
 import com.chiarapuleio.devicesmanagement.payloads.DeviceDTO;
 import com.chiarapuleio.devicesmanagement.services.DeviceService;
@@ -50,6 +51,12 @@ public class DeviceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findAndDelete(@PathVariable UUID id){
         devSrv.findByIdAndDelete(id);
+    }
+
+    @PatchMapping("/{deviceId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Device setDeviceEmployee(@PathVariable UUID deviceId, @RequestBody UUID employeeId){
+        return devSrv.setDeviceEmployee(employeeId, deviceId);
     }
 
 }

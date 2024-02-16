@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,5 +54,14 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findAndDelete(@PathVariable UUID id){
         employeeSrv.findByIdAndDelete(id);
+    }
+
+    @PatchMapping("/{authorId}/avatar")
+    public Employee uploadAvatar(@RequestParam("avatar") MultipartFile file, @PathVariable UUID id) {
+        try {
+            return employeeSrv.uploadAvatar(id, file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
