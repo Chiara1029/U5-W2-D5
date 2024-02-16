@@ -6,6 +6,7 @@ import com.chiarapuleio.devicesmanagement.entities.Employee;
 import com.chiarapuleio.devicesmanagement.enums.DeviceStatus;
 import com.chiarapuleio.devicesmanagement.exceptions.NotFoundException;
 import com.chiarapuleio.devicesmanagement.payloads.DeviceDTO;
+import com.chiarapuleio.devicesmanagement.payloads.EmployeeUuidDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,8 +44,8 @@ public class DeviceService {
         deviceDAO.delete(devFound);
     }
 
-    public Device setDeviceEmployee(UUID employeeId, UUID deviceId){
-        Employee employee = empSrv.findById(employeeId);
+    public Device setDeviceEmployee(UUID deviceId, EmployeeUuidDTO employeeId){
+        Employee employee = empSrv.findById(employeeId.id());
         Device devFound = this.findById(deviceId);
         devFound.setEmployee(employee);
         devFound.setDeviceStatus(DeviceStatus.ASSIGNED);

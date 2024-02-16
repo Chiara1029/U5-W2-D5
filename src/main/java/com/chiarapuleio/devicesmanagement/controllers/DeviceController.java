@@ -5,6 +5,7 @@ import com.chiarapuleio.devicesmanagement.entities.Device;
 import com.chiarapuleio.devicesmanagement.entities.Employee;
 import com.chiarapuleio.devicesmanagement.exceptions.BadRequestException;
 import com.chiarapuleio.devicesmanagement.payloads.DeviceDTO;
+import com.chiarapuleio.devicesmanagement.payloads.EmployeeUuidDTO;
 import com.chiarapuleio.devicesmanagement.services.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,10 +54,13 @@ public class DeviceController {
         devSrv.findByIdAndDelete(id);
     }
 
-    @PatchMapping("/{deviceId}")
+    @PatchMapping("/{deviceId}/employee")
     @ResponseStatus(HttpStatus.CREATED)
-    public Device setDeviceEmployee(@PathVariable UUID deviceId, @RequestBody UUID employeeId){
-        return devSrv.setDeviceEmployee(employeeId, deviceId);
+    public Device setDeviceEmployee(@PathVariable UUID deviceId, @RequestBody EmployeeUuidDTO employeeId, BindingResult validation){
+        if(validation.hasErrors()){
+            throw new BadRequestException(validation.getAllErrors());
+        }
+        return devSrv.setDeviceEmployee(deviceId, employeeId);
     }
 
 }
